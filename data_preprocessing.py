@@ -64,5 +64,5 @@ def createInfoFile(imageDirectory, masksDirectory, numberOfImages, fileName):
     file.close()
 
 # maskedImage = img * maskedImage
-createInfoFile(imageDirectory, masksDirectory, 750, "info.dat")
+createInfoFile(imageDirectory, masksDirectory, 750, "ears.info")
 
