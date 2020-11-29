@@ -1,10 +1,8 @@
 import cv2, sys
+import os
 import math
 import numpy as np
 from rectangle import Rectangle
-
-imageDirectory = sys.argv[1]
-masksDirectory = sys.argv[2]
 
 def getFileName(number):
     zeros = ""
@@ -42,10 +40,25 @@ def findRectangles(image):
     return rectangles
 
 
-def createInfoFile(imageDirectory, masksDirectory, numberOfImages, fileName):
+def add_another_dataset(w_file, path):
+
+    files = os.listdir(path)
+
+    for f in files:
+        image_name = path + "/" + f
+        image = cv2.imread(image_name)
+        w_file.write(image_name + " " + "1" + " " + "0" + " " + "0" + " " + str(image.shape[1]) + " " + str(image.shape[0]) + "\n")
+
+
+def createInfoFile(imageDirectory, masksDirectory, numberOfImages, other_datasets_path, fileName):
 
     file = open(fileName, "w")
 
+    datasets = os.listdir(other_datasets_path)
+    for dataset in datasets:
+        add_another_dataset(file, other_datasets_path + "/" + dataset)
+    
+    """
     for i in range(0, numberOfImages+1):
         print(i)
         originalImage = imageDirectory + "/" + getFileName(i)
@@ -60,9 +73,13 @@ def createInfoFile(imageDirectory, masksDirectory, numberOfImages, fileName):
         #showImage(mask)
 
         file.write(originalImage + " " + str(len(rectangles)) + " " + "\t".join(map(str, rectangles)) + "\n")
-
+    """
     file.close()
 
 # maskedImage = img * maskedImage
-createInfoFile(imageDirectory, masksDirectory, 750, "ears.info")
 
+
+if __name__ == "__main__":
+    imageDirectory = sys.argv[1]
+    masksDirectory = sys.argv[2]
+    createInfoFile(imageDirectory, masksDirectory, 750, sys.argv[3], "ears.info")

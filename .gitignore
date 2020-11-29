@@ -131,3 +131,4 @@ dmypy.json
 # Data
 AWEForSegmentation/
 negatives/
+other_dataset/
