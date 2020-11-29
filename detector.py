@@ -10,7 +10,7 @@ def showImage (image):
     cv2.destroyAllWindows()  
 
 def detectEar(img):
-	detectionList = cascadeEar.detectMultiScale(img, 1.07, 7)
+	detectionList = cascadeEar.detectMultiScale(img, 1.01, 10)
 	return detectionList
 	
 def vizualization(img, detectionList):

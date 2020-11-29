@@ -46,8 +46,8 @@ def detectEar(img, scale, min_neighbours):
 cascadeEar = cv2.CascadeClassifier("classifier/cascade.xml")
 testImagesDirectory = "AWEForSegmentation/test/"
 
-scales = [1.05, 1.06, 1.08]
-neighbors = [6, 8, 10]
+scales = [1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.1]
+neighbors = [2, 4, 6, 8, 10, 12]
 
 #scales = [1.05]
 #neighbors = [5]
