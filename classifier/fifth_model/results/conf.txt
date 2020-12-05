@@ -1,8 +1,0 @@
-positive_samples="ears_positive_samples.vec"
-negative_samples="negatives.txt"
-num_positives=600
-num_negatives=300
-num_stages=30
-width=64
-height=64
-type="LBP"
