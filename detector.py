@@ -4,6 +4,27 @@ import cv2, sys
 
 cascadeEar = cv2.CascadeClassifier("classifier/cascade.xml")
 
+def calculate_recall():
+    try:
+        recall = detections_overall["TP"]/(detections_overall["TP"] + detections_overall["FN"])
+        return recall
+    except ZeroDivisionError:
+         return 0
+def calculate_precision():
+    try:
+        precision = detections_overall["TP"]/(detections_overall["TP"] + detections_overall["FP"])
+        return precision
+    except ZeroDivisionError:
+         return 0
+
+def calculate_Fscore():
+    try:
+        F_score = 2 * ((calculate_precision() * calculate_recall())/(calculate_precision() + calculate_recall()))
+        return F_score
+    except ZeroDivisionError:
+         return 0
+
+
 def showImage (image):
     cv2.imshow('sth', image)
     cv2.waitKey(3000)
@@ -30,7 +51,7 @@ def classify(detections, file_name, mode):
 	
 	tps = 0
 	fps = 0
-	tns = 0
+	fns = 0
 
 	for x, y, w, h in detections:
 		rec = Rectangle(x,y,w,h)
@@ -45,13 +66,16 @@ def classify(detections, file_name, mode):
 				was_classified = True
 		if not was_classified:
 			fps += 1
-	tns += len(rectangles) - tps
+	fns += len(rectangles) - tps
 
 	if mode == 'manually':
 		vizualization(cv2.imread(file_name), detections)
 	else:
 		save_image(cv2.imread(file_name), "classifier/evaluation/" + file_name[-8:], detections)
-		results.write("TP: {}\tFP:{}\tTN:{}\n".format(tps, fps, tns))
+		results.write("TP: {}\tFP:{}\tFN:{}\n".format(tps, fps, fns))
+		detections_overall["TP"] += tps
+		detections_overall["FP"] += fps
+		detections_overall["FN"] += fns
 
 if __name__ == "__main__":
 	
@@ -68,9 +92,11 @@ if __name__ == "__main__":
 			classify(detectionList, filename, 'manually')
 		if sys.argv[2] == '--classify-all':
 			results = open("classifier/evaluation/results.csv", "w")
+			detections_overall = {"TP": 0, "FP": 0, "FN": 0}
 			for i in range(0, 250):
 				img = cv2.imread(filename + "/" + getFileName(i))
 				detectionList = detectEar(img)
 				results.write(str(i) + ": ")
 				classify(detectionList, filename + "/" + getFileName(i), 'auto')
+			results.write("{},{},{},{}\n".format(detections_overall, calculate_recall(), calculate_precision(), calculate_Fscore()))
 			results.close()

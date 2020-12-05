@@ -1,6 +1,8 @@
 # ear-detector
 
-This repository contains all code that was written for an ear detector. Datasets are not included as it is not a good practice to store on github a large amount of raw data. If anyone is interested in the data that was used for training the classifier, feel free to contact me via email: zan@magerl.si.
+This repository contains all code that was written for an ear detector. Train datasets are not included.
+
+In order to re-run the evaluation stage, run the `rerun.sh`. This script will remove the previous evaluation and will evaluate the whole test dataset and save the images of the detections together with `results.csv` file that contains number of TP, FP and TN for every image and overall acurracy on the test dataset.
 
 ## Directory structure
 
@@ -30,4 +32,4 @@ Each python file has descriptive name:
 * `detector.py`: the actual detector that runs the ear detector (it's `cascade.xml` file has to be in `classifier` folder). It has 3 different modes:
     * detect mode: accepts the image, runs the ear detector and shows the resulting image with the marked ears.
     * classify mode: accpets the image and the reference, runs the ear detector, shows the resulting image with the marked ears and writes the locations of the detected ear together with the evaluation on the standard output.
-    * classify-all mode: it accepts the folder that contains the test dataset and the folder with the references. Then it runs the detector and stores both marked images and the evaluation result in the separate `results.csv` file in the `classifier/evaluation` folder. This can be extremly useful in the analysis step.
+    * classify-all mode: it accepts the folder that contains the test dataset. Then it runs the detector and stores both marked images and the evaluation result in the separate `results.csv` file in the `classifier/evaluation` folder. This can be extremly useful in the analysis step.
