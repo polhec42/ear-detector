@@ -55,11 +55,14 @@ neighbors = [2, 4, 6, 8, 10, 12]
 pastConfigurationsFile = open("configurations.csv", "r+")
 past_configurations = []
 
+firstLine = True
+
 for configuration in pastConfigurationsFile.readlines():
+    if firstLine:
+        firstLine = False
+        continue
     splittedLine = configuration.split("\t")
     past_configurations.append((splittedLine[0], splittedLine[1]))
-
-resultFile = open("results.txt", "w")
 
 mask_rectangles = load_masks()
 
@@ -92,34 +95,30 @@ for scale in scales:
 
             number_of_tp = 0
             for detected_ear in detected_ears:
-                
-                is_ear = False
-                
+
+                was_classified = False
+
                 for segmented_ear in segmented_ears:
+                    
                     overlap = Rectangle.overlap(detected_ear, segmented_ear)
 
-                    if overlap > 0:
-                        if overlap > int(0.4 * segmented_ear.area()) and overlap > int(0.4*detected_ear.area()):
-                            number_of_tp += 1
-                            #print(i)
-                            is_ear = True
-                            detections["TP"] += 1
-                            
-                if not is_ear:
+                    if overlap > int(0.42 * (segmented_ear.area() + detected_ear.area() - overlap)):
+                        number_of_tp += 1
+                        was_classified = True
+                        detections["TP"] += 1
+                        break
+                    elif overlap > 0:
+                        was_classified = True
+                        detections["FP"] += 1  
+                        break    
+
+                if not was_classified:
                     detections["FP"] += 1
 
             detections["FN"] += len(segmented_ears) - number_of_tp
 
-        resultFile.write("scale: {}, neighbors: {} \n".format(scale, neighbor))
-        resultFile.write(str(detections) + "\n")
-        resultFile.write("Recall: " + str(calculate_recall()) + "\n")
-        resultFile.write("Precision: " + str(calculate_precision()) + "\n")
-        resultFile.write("F1 score: " + str(calculate_Fscore()) + "\n")
-        resultFile.write("-------------------------------------\n")
-
-        pastConfigurationsFile.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(scale, neighbor, detections, calculate_recall(), calculate_precision(), calculate_Fscore()))
+        pastConfigurationsFile.write("{},{},{},{},{},{}\n".format(scale, neighbor, detections, calculate_recall(), calculate_precision(), calculate_Fscore()))
     
-resultFile.close()
 pastConfigurationsFile.close()
 
 
