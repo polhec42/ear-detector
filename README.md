@@ -2,7 +2,7 @@
 
 This repository contains all code that was written for an ear detector. Train datasets are not included.
 
-In order to re-run the evaluation stage, run the `rerun.sh`. This script will remove the previous evaluation and will evaluate the whole test dataset and save the images of the detections together with `results.csv` file that contains number of TP, FP and TN for every image and overall acurracy on the test dataset.
+In order to re-run the evaluation stage, run the `rerun.sh`. This script will remove the previous evaluation in `classifier/evaluation` and will evaluate the whole test dataset and save the images of the detections together with `results.csv` file that contains number of TP, FP and TN for every image and overall acurracy on the test dataset.
 
 ## Directory structure
 

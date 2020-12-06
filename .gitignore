@@ -132,4 +132,4 @@ dmypy.json
 AWEForSegmentation/train*
 negatives/
 other_dataset/
-classifier/evaluation
+# classifier/evaluation
